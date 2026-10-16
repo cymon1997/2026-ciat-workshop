@@ -1,0 +1,29 @@
+.gitignore
+  s_9133a130caeab1::t_de1591c977813f 3,6
+  h_085535b7552fca 1-2,4-5
+Makefile
+  s_9133a130caeab1::t_a61bcb6eeb9405 4,8
+  s_9133a130caeab1::t_de1591c977813f 2-3,5-7
+  h_085535b7552fca 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.11",
+  "base_commit_sha": "b8cb77d13aaee693e4420727628b547be2a4cfa2",
+  "prompts": {},
+  "humans": {
+    "h_085535b7552fca": {
+      "author": "cymon1997 <cybermonster82@yahoo.com>"
+    }
+  },
+  "sessions": {
+    "s_9133a130caeab1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f51bca74-778d-46eb-9b98-94118b004a13",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "cymon1997 <cybermonster82@yahoo.com>"
+    }
+  }
+}
