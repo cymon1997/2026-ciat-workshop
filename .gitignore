@@ -1,0 +1,6 @@
+# Hidden test cases
+promo/hidden_test.go
+promo/extended_test.go
+
+# Admin
+admin/
