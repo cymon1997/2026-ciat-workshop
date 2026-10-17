@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sync"
 	"time"
 )
 
@@ -26,6 +27,7 @@ type RedeemService struct {
 	store  Store
 	logger *log.Logger
 	now    func() time.Time
+	mu    sync.Mutex // protects the Redeem method, so that quota checks are accurate
 }
 
 func NewRedeemService(store Store, logger *log.Logger) *RedeemService {
@@ -34,6 +36,8 @@ func NewRedeemService(store Store, logger *log.Logger) *RedeemService {
 
 // Redeem uses one unit of the promo's quota for the given order.
 func (s *RedeemService) Redeem(ctx context.Context, req RedeemRequest) (Redemption, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	if req.PromoCode == "" || req.UserID == "" || req.OrderID == "" {
 		return Redemption{}, ErrInvalidRequest
 	}
@@ -56,6 +60,7 @@ func (s *RedeemService) Redeem(ctx context.Context, req RedeemRequest) (Redempti
 		OrderID:    req.OrderID,
 		RedeemedAt: s.now(),
 	}
+
 	if err := s.store.InsertRedemption(ctx, r); err != nil {
 		return Redemption{}, fmt.Errorf("insert redemption: %w", err)
 	}
@@ -68,3 +73,4 @@ func (s *RedeemService) Redeem(ctx context.Context, req RedeemRequest) (Redempti
 		promo.ID, req.UserID, req.OrderID, promo.Used+1, promo.Quota)
 	return r, nil
 }
+
