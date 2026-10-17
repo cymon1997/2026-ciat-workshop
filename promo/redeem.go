@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"sync"
 	"time"
 )
 
@@ -26,6 +27,7 @@ type RedeemService struct {
 	store  Store
 	logger *log.Logger
 	now    func() time.Time
+	mu		 sync.Mutex
 }
 
 func NewRedeemService(store Store, logger *log.Logger) *RedeemService {
@@ -38,6 +40,8 @@ func (s *RedeemService) Redeem(ctx context.Context, req RedeemRequest) (Redempti
 		return Redemption{}, ErrInvalidRequest
 	}
 
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	promo, err := s.store.GetPromo(ctx, req.PromoCode)
 	if err != nil {
 		return Redemption{}, fmt.Errorf("get promo %s: %w", req.PromoCode, err)
